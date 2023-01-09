@@ -1,74 +1,57 @@
-import React, { useState } from "react";
-// import { nanoid } from "nanoid";
-import { v4 as uuid } from "uuid";
-import NotesList from "./NotesList";
-import SearchNotes from "./SearchNotes";
-import Header from "./Header";
+import React, { useEffect, useState } from "react";
+import NoteContainer from "./NoteContainer";
+import SideBar from "./SideBar";
 import "../../Styles/NotesMain.css";
-import axios from "axios";
 
 export const NotesMain = () => {
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState(
+    JSON.parse(localStorage.getItem("notes-app")) || []
+  );
 
-  const [searchText, setSearchText] = useState("");
+  const addNote = (color) => {
+    const tempNotes = [...notes];
 
-  const [darkMode, setDarkMode] = useState(false);
-
-  // useEffect(() => {
-  //   const savedNotes = JSON.parse(localStorage.getItem("react-notes-app-data"));
-  //   if (savedNotes) {
-  //     setNotes(savedNotes);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   localStorage.setItem("react-notes-app-data", JSON.stringify(notes));
-  // }, [notes]);
-
-  const addNote = (text) => {
-    const date = new Date();
-
-    const newNote = {
-      id: uuid(),
-      // id: nanoid(),
-      text: text,
-      date: date.toLocaleDateString(),
-    };
-
-    const url = "http://localhost:9000/add-note";
-    axios
-      .post(url, {
-        note_id: newNote.id,
-        text: text,
-        user_id: 123,
-      })
-      .then((res) => {
-        console.log(res);
-        console.log("Notes !!!");
-      });
-
-    const newNotes = [...notes, newNote];
-    setNotes(newNotes);
+    tempNotes.push({
+      id: Date.now() + "" + Math.floor(Math.random() * 78),
+      text: "",
+      time: Date.now(),
+      color,
+    });
+    setNotes(tempNotes);
   };
 
   const deleteNote = (id) => {
-    const newNotes = notes.filter((note) => note.id !== id);
-    setNotes(newNotes);
+    const tempNotes = [...notes];
+
+    const index = tempNotes.findIndex((item) => item.id === id);
+    if (index < 0) return;
+
+    tempNotes.splice(index, 1);
+    setNotes(tempNotes);
   };
 
+  const updateText = (text, id) => {
+    const tempNotes = [...notes];
+
+    const index = tempNotes.findIndex((item) => item.id === id);
+    if (index < 0) return;
+
+    tempNotes[index].text = text;
+    setNotes(tempNotes);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("notes-app", JSON.stringify(notes));
+  }, [notes]);
+
   return (
-    <div className={`${darkMode && "dark-mode"}`}>
-      <div className="container">
-        <Header handleToggleDarkMode={setDarkMode} />
-        <SearchNotes handleSearchNote={setSearchText} />
-        <NotesList
-          notes={notes.filter((note) =>
-            note.text.toLowerCase().includes(searchText)
-          )}
-          handleAddNote={addNote}
-          handleDeleteNote={deleteNote}
-        />
-      </div>
+    <div className="App">
+      <SideBar addNote={addNote} />
+      <NoteContainer
+        notes={notes}
+        deleteNote={deleteNote}
+        updateText={updateText}
+      />
     </div>
   );
 };
