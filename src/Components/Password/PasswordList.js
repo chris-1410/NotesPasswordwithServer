@@ -57,7 +57,8 @@ const PasswordList = () => {
               className="btn btn-success"
               data-toggle="modal"
             >
-              <i className="material-icons">&#xE147;</i>{" "}
+              <i class="material-icons add_box">&#xe146;</i>
+              {""}
               <span>Add New Password</span>
             </Button>
           </div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../../Styles/NotesMain.css";
 
+
 const AddNote = ({ handleAddNote }) => {
   const [noteText, setNoteText] = useState("");
 
@@ -13,6 +14,7 @@ const AddNote = ({ handleAddNote }) => {
   };
 
   const handleSaveClick = () => {
+    
     if (noteText.trim().length > 0) {
       handleAddNote(noteText);
       setNoteText("");
