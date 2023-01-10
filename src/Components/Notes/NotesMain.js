@@ -36,6 +36,7 @@ export const NotesMain = () => {
       })
       .then((res) => {
         setNotes(res.data);
+        setuserId(userId);
       });
   };
 
@@ -54,7 +55,7 @@ export const NotesMain = () => {
       })
       .then((res) => {
         console.log(res);
-        console.log("Notes !!!");
+        console.log("New Note Added !!!");
       });
 
     tempNotes.push({
@@ -101,7 +102,7 @@ export const NotesMain = () => {
       })
       .then((res) => {
         console.log(res);
-        console.log("Notes !!!");
+        console.log("Updates Notes !!!");
       });
 
     const index = tempNotes.findIndex((item) => item.id === id);
