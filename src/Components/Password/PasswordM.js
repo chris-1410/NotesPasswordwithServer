@@ -49,11 +49,6 @@ const PasswordM = ({ password }) => {
         <Modal.Body>
           <EditPasswordForm thePassword={password} />
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close Button
-          </Button>
-        </Modal.Footer>
       </Modal>
     </>
   );

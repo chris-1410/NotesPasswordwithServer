@@ -1,47 +1,100 @@
 import React, { useEffect, useState } from "react";
 import NoteContainer from "./NoteContainer";
 import SideBar from "./SideBar";
+import axios from "axios";
 import "../../Styles/NotesMain.css";
 
 export const NotesMain = () => {
-  const [notes, setNotes] = useState(
-    JSON.parse(localStorage.getItem("notes-app")) || []
-  );
+  const [notes, setNotes] = useState([]);
+
+  // allNotes();
+
+  const allNotes = () => {
+    const url = "http://localhost:9000/display-note";
+    axios
+      .post(url, {
+        user_id: 123,
+      })
+      .then((res) => {
+        setNotes(res.data);
+      });
+  };
 
   const addNote = (color) => {
     const tempNotes = [...notes];
 
+    const url = "http://localhost:9000/add-note";
+    const id = Date.now() + "" + Math.floor(Math.random() * 78);
+    axios
+      .post(url, {
+        note_id: id,
+        text: "",
+        time: Date.now(),
+        user_id: 123,
+        color: color,
+      })
+      .then((res) => {
+        console.log(res);
+        console.log("Notes !!!");
+      });
+
     tempNotes.push({
-      id: Date.now() + "" + Math.floor(Math.random() * 78),
+      id: id,
       text: "",
       time: Date.now(),
       color,
     });
-    setNotes(tempNotes);
+
+    allNotes();
+    // setNotes(tempNotes);
   };
 
   const deleteNote = (id) => {
     const tempNotes = [...notes];
 
+    const url = "http://localhost:9000/delete-note";
+    axios
+      .post(url, {
+        note_id: id,
+      })
+      .then((res) => {
+        console.log(res);
+        console.log("Notes !!!");
+      });
+
     const index = tempNotes.findIndex((item) => item.id === id);
     if (index < 0) return;
 
     tempNotes.splice(index, 1);
-    setNotes(tempNotes);
+    allNotes();
+    // setNotes(tempNotes);
   };
 
   const updateText = (text, id) => {
     const tempNotes = [...notes];
 
+    const url = "http://localhost:9000/update-note";
+
+    axios
+      .put(url, {
+        note_id: id,
+        text: text,
+      })
+      .then((res) => {
+        console.log(res);
+        console.log("Notes !!!");
+      });
+
     const index = tempNotes.findIndex((item) => item.id === id);
     if (index < 0) return;
 
     tempNotes[index].text = text;
-    setNotes(tempNotes);
+    allNotes();
+    // setNotes(tempNotes);
   };
 
   useEffect(() => {
-    localStorage.setItem("notes-app", JSON.stringify(notes));
+    allNotes();
   }, [notes]);
 
   return (
