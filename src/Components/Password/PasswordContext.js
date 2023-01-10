@@ -34,10 +34,12 @@ const PasswordContextProvider = (props) => {
   );
 
   const displayPassword = () => {
+    // var y = localStorage.getItem("email");
     const url = "http://localhost:9000/display-password";
     axios
       .post(url, {
         userid: userId,
+        // email: y,
       })
       .then((res) => {
         console.log(res.data);
@@ -69,19 +71,6 @@ const PasswordContextProvider = (props) => {
     // displayPassword();
   };
 
-  const deletePassword = (id) => {
-    const url = "http://localhost:9000/delete-password";
-    axios
-      .post(url, {
-        id: id,
-      })
-      .then((res) => {
-        // console.log(res.data);
-        console.log("Deleted Password Entry ");
-      });
-    setPasswords(passwords.filter((password) => password.id !== id));
-  };
-
   const updatePassword = (id, updatedPassword) => {
     const url = "http://localhost:9000/update-password";
     axios
@@ -98,6 +87,21 @@ const PasswordContextProvider = (props) => {
         password.id === id ? updatedPassword : password
       )
     );
+    displayPassword();
+  };
+
+  const deletePassword = (id) => {
+    const url = "http://localhost:9000/delete-password";
+    axios
+      .post(url, {
+        id: id,
+      })
+      .then((res) => {
+        // console.log(res.data);
+        console.log("Deleted Password Entry ");
+      });
+    setPasswords(passwords.filter((password) => password.id !== id));
+    displayPassword();
   };
 
   return (
@@ -107,7 +111,7 @@ const PasswordContextProvider = (props) => {
         addPassword,
         deletePassword,
         updatePassword,
-        // displayPassword,
+        displayPassword,
       }}
     >
       {props.children}

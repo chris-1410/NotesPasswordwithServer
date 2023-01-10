@@ -24,7 +24,7 @@ export const NotesMain = () => {
 
   useEffect(() => {
     getUserId();
-  }, [""]);
+  }, []);
 
   // allNotes();
 
