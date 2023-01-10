@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { PasswordContext } from "./PasswordContext";
-import { Modal, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Modal, OverlayTrigger, Tooltip } from "react-bootstrap";
 import EditPasswordForm from "./EditPasswordForm";
 
 const PasswordM = ({ password }) => {

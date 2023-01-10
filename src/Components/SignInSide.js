@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,6 +10,8 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Copyright(props) {
   return (
@@ -25,13 +27,37 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const navigate = useNavigate();
+
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+
+  function onChange(e) {
+    const newdata = { ...data };
+    newdata[e.target.id] = e.target.value;
+    setData(newdata);
+    console.log(newdata);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const url = "http://localhost:9000/signin";
+
+    axios
+      .post(url, {
+        email: data.email,
+        password: data.password,
+      })
+      .then((res) => {
+        localStorage.setItem("email", data.email);
+        if (res.data.sucess == "True") {
+          navigate("/Home");
+          console.log("Logged in Successfully !!!");
+        }
+      });
   };
 
   return (
@@ -79,7 +105,9 @@ export default function SignInSide() {
               <TextField
                 margin="normal"
                 required
+                onChange={(e) => onChange(e)}
                 fullWidth
+                value={data.email}
                 id="email"
                 label="Email Address"
                 name="email"
@@ -88,8 +116,10 @@ export default function SignInSide() {
               />
               <TextField
                 margin="normal"
+                onChange={(e) => onChange(e)}
                 required
                 fullWidth
+                value={data.password}
                 name="password"
                 label="Password"
                 type="password"
@@ -101,12 +131,13 @@ export default function SignInSide() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 1, mb: 1 }}
+                onSubmit={handleSubmit}
               >
                 Sign In
               </Button>
-              <Link href="/Home" variant="body2">
+              {/* <Link href="/Home" variant="body2">
                 {"HomePage"}
-              </Link>
+              </Link> */}
               <Grid container>
                 <Grid item>
                   <Link href="/Signup" variant="body2">

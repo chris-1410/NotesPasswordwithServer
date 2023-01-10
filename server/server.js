@@ -37,28 +37,28 @@ app.post("/delete-password", (req, res) => {
 
 //update password
 app.put("/update-password", (req, res) => {
-    const user = req.body.updatedPassword;
-    let deleteQuery = `update passwords set websitename ='${user.websitename}', websiteurl ='${user.websiteurl}', passkey ='${user.passkey}', username ='${user.username}',updated_at=current_date where id = '${req.body.id}'`;
-    pool.query(deleteQuery, (err, result) => {
-        if (!err) {
-            res.send("updated");
-        } else {
-            console.log("Updated Password");
-            console.log(err.message);
-        }
-    });
+  const user = req.body.updatedPassword;
+  let deleteQuery = `update passwords set websitename ='${user.websitename}', websiteurl ='${user.websiteurl}', passkey ='${user.passkey}', username ='${user.username}',updated_at=current_date where id = '${req.body.id}'`;
+  pool.query(deleteQuery, (err, result) => {
+    if (!err) {
+      res.send("updated");
+    } else {
+      console.log("Updated Password");
+      console.log(err.message);
+    }
+  });
 });
 
 //display all passwords
 app.post("/display-password", (req, res) => {
-    let insertQuery = `select * from passwords where userid = '${req.body.userid}'`;
-    pool.query(insertQuery, (err, result) => {
-        if (!err) {
-            res.send(result.rows);
-        } else {
-            console.log(err.message);
-        }
-    });
+  let insertQuery = `select * from passwords where userid = '${req.body.userid}'`;
+  pool.query(insertQuery, (err, result) => {
+    if (!err) {
+      res.send(result.rows);
+    } else {
+      console.log(err.message);
+    }
+  });
 });
 
 //add new note
@@ -102,7 +102,7 @@ app.put("/update-note", (req, res) => {
   let deleteQuery = `update notes set text ='${req.body.text}' where id = '${req.body.note_id}'`;
   pool.query(deleteQuery, (err, result) => {
     if (!err) {
-      res.send("deleted");
+      res.send("Update Note");
     } else {
       console.log(err.message);
     }
@@ -118,8 +118,8 @@ app.post("/signup", (req, res) => {
     if (!err) {
       console.log("inside if");
       if (result.rows[0].count == 0) {
-        let insertQuery = `insert into users(name, email, password, role)
-                            values('${user.name}', '${user.email}', '${user.password}', 'user') `;
+        let insertQuery = `insert into users(name, email, password)
+                            values('${req.body.name}', '${req.body.email}', '${req.body.password}') `;
         pool.query(insertQuery, (err, result1) => {
           if (!err) {
             res.send({ exists: "False", insert: "Insertion was successful" });
@@ -144,14 +144,15 @@ app.post("/signin", (req, res) => {
   const user = req.body;
   const email = user.email;
   const password = user.password;
-  let passQuery = `Select password,role from users where email = '${email}'`;
+  let passQuery = `Select password from users where email = '${email}'`;
   pool.query(passQuery, (err, result) => {
-    console.log(result1.rows);
+    // console.log(result.rows);
     if (result.rows != 0) {
       if (result.rows[0].password == password) {
         console.log(result.rows);
+        console.log("Logged in Successfully !!!");
         res.send({
-          success: "True",
+          sucess: "True",
         });
       } else {
         res.send({
@@ -162,6 +163,27 @@ app.post("/signin", (req, res) => {
       res.send({
         sucess: "False",
       });
+    }
+  });
+});
+
+//give user-id to the frontend
+app.post("/user-id", (req, res) => {
+  const email = req.body.email;
+  let searchQuery = `Select count(email) from users where email = '${email}'`;
+  pool.query(searchQuery, (err, result) => {
+    if (!err) {
+      if (result.rows[0].count == 1) {
+        let passQuery = `Select user_id from users where email = '${email}'`;
+        pool.query(passQuery, (err, result1) => {
+          console.log(result1);
+          let user_id = result1.rows[0].user_id;
+          console.log(user_id);
+          res.send({
+            sucess: user_id,
+          });
+        });
+      }
     }
   });
 });

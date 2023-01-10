@@ -7,13 +7,32 @@ import "../../Styles/NotesMain.css";
 export const NotesMain = () => {
   const [notes, setNotes] = useState([]);
 
+  const [userId, setuserId] = useState();
+
+  function getUserId() {
+    var x = localStorage.getItem("email");
+    const url2 = "http://localhost:9000/user-id";
+    axios
+      .post(url2, {
+        email: x,
+      })
+      .then((res) => {
+        setuserId(res.data.sucess);
+      });
+    console.log("userId " + userId);
+  }
+
+  useEffect(() => {
+    getUserId();
+  }, [""]);
+
   // allNotes();
 
   const allNotes = () => {
     const url = "http://localhost:9000/display-note";
     axios
       .post(url, {
-        user_id: 123,
+        user_id: userId,
       })
       .then((res) => {
         setNotes(res.data);
@@ -30,7 +49,7 @@ export const NotesMain = () => {
         note_id: id,
         text: "",
         time: Date.now(),
-        user_id: 123,
+        user_id: userId,
         color: color,
       })
       .then((res) => {

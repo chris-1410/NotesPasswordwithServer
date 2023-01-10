@@ -6,6 +6,25 @@ export const PasswordContext = createContext();
 const PasswordContextProvider = (props) => {
   const [passwords, setPasswords] = useState([]);
 
+  const [userId, setuserId] = useState();
+
+  function getUserId() {
+    var x = localStorage.getItem("email");
+    const url2 = "http://localhost:9000/user-id";
+    axios
+      .post(url2, {
+        email: x,
+      })
+      .then((res) => {
+        setuserId(res.data.sucess);
+      });
+    console.log("userId " + userId);
+  }
+
+  useEffect(() => {
+    getUserId();
+  });
+
   useEffect(() => {
     displayPassword();
   }, []);
@@ -18,7 +37,7 @@ const PasswordContextProvider = (props) => {
     const url = "http://localhost:9000/display-password";
     axios
       .post(url, {
-        userid: 456,
+        userid: userId,
       })
       .then((res) => {
         console.log(res.data);
@@ -37,7 +56,7 @@ const PasswordContextProvider = (props) => {
         websiteurl: websiteurl,
         passkey: passkey,
         username: username,
-        userid: 456,
+        userid: userId,
       })
       .then((res) => {
         // console.log(res.data);
@@ -47,7 +66,7 @@ const PasswordContextProvider = (props) => {
       ...passwords,
       { id: id, websitename, websiteurl, username, passkey },
     ]);
-    displayPassword();
+    // displayPassword();
   };
 
   const deletePassword = (id) => {
