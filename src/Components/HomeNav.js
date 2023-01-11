@@ -13,14 +13,13 @@ import Logout from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 
 export const HomeNav = () => {
-
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/Signin");
+    navigate("/");
     console.log("Clicked Logout !!!");
   };
 

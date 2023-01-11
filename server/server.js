@@ -16,7 +16,7 @@ app.post("/add-password", (req, res) => {
   let insertQuery = `insert into passwords (id,websitename,websiteurl,passkey,username,created_at,updated_at,userid) values ('${user.id}','${user.websitename}','${user.websiteurl}','${user.passkey}','${user.username}',CURRENT_DATE,CURRENT_DATE,'${user.userid}')`;
   pool.query(insertQuery, (err, result) => {
     if (!err) {
-      res.send("inserted");
+      res.send("Added New Password ");
     } else {
       console.log(err.message);
     }
@@ -28,7 +28,7 @@ app.post("/delete-password", (req, res) => {
   let deleteQuery = `delete from passwords where id = '${req.body.id}'`;
   pool.query(deleteQuery, (err, result) => {
     if (!err) {
-      res.send("deleted");
+      res.send("Deleted Password");
     } else {
       console.log(err.message);
     }
@@ -41,7 +41,7 @@ app.put("/update-password", (req, res) => {
   let deleteQuery = `update passwords set websitename ='${user.websitename}', websiteurl ='${user.websiteurl}', passkey ='${user.passkey}', username ='${user.username}',updated_at=current_date where id = '${req.body.id}'`;
   pool.query(deleteQuery, (err, result) => {
     if (!err) {
-      res.send("updated");
+      res.send("Updated Password Entry ");
     } else {
       console.log("Updated Password");
       console.log(err.message);
@@ -51,7 +51,7 @@ app.put("/update-password", (req, res) => {
 
 //display all passwords
 app.post("/display-password", (req, res) => {
-  let insertQuery = `select * from passwords where userid = '${req.body.userid}'`;
+  let insertQuery = `select * from passwords where userid = (select user_id from users where email = '${req.body.email}')`;
   pool.query(insertQuery, (err, result) => {
     if (!err) {
       res.send(result.rows);
@@ -63,10 +63,10 @@ app.post("/display-password", (req, res) => {
 
 //add new note
 app.post("/add-note", (req, res) => {
-  let insertQuery = `insert into notes (id,text,time,color,user_id) values ('${req.body.note_id}','${req.body.text}',current_date,'${req.body.color}','${req.body.user_id}')`;
+  let insertQuery = `insert into notes (id,text,time,color,user_id) values ('${req.body.note_id}','${req.body.text}',now(),'${req.body.color}','${req.body.user_id}')`;
   pool.query(insertQuery, (err, result) => {
     if (!err) {
-      res.send("inserted");
+      res.send("Added New Note");
     } else {
       console.log(err.message);
     }
@@ -75,7 +75,7 @@ app.post("/add-note", (req, res) => {
 
 //display notes
 app.post("/display-note", (req, res) => {
-  let selectQuery = `select * from notes where user_id = '${req.body.user_id}'`;
+  let selectQuery = `select * from notes where user_id = (select user_id from users where email = '${req.body.email}')`;
   pool.query(selectQuery, (err, result) => {
     if (!err) {
       res.send(result.rows);
@@ -90,7 +90,7 @@ app.post("/delete-note", (req, res) => {
   let deleteQuery = `delete from notes where id = '${req.body.note_id}'`;
   pool.query(deleteQuery, (err, result) => {
     if (!err) {
-      res.send("deleted");
+      res.send("Deleted Note");
     } else {
       console.log(err.message);
     }
@@ -102,7 +102,7 @@ app.put("/update-note", (req, res) => {
   let deleteQuery = `update notes set text ='${req.body.text}' where id = '${req.body.note_id}'`;
   pool.query(deleteQuery, (err, result) => {
     if (!err) {
-      res.send("Update Note");
+      res.send("Update Note !!!");
     } else {
       console.log(err.message);
     }

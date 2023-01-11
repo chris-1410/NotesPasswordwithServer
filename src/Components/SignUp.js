@@ -26,7 +26,6 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
-  
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -42,7 +41,7 @@ export default function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     const url = "http://localhost:9000/signup";
 
     axios
@@ -133,7 +132,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/Signin" variant="body2">
+                <Link href="/" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

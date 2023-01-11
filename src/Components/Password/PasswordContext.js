@@ -4,15 +4,15 @@ import axios from "axios";
 export const PasswordContext = createContext();
 
 const PasswordContextProvider = (props) => {
-  const [passwords, setPasswords] = useState([]);
+  const email = localStorage.getItem("email");
 
   const [userId, setuserId] = useState();
 
   function getUserId() {
     var x = localStorage.getItem("email");
-    const url2 = "http://localhost:9000/user-id";
+    const url = "http://localhost:9000/user-id";
     axios
-      .post(url2, {
+      .post(url, {
         email: x,
       })
       .then((res) => {
@@ -23,7 +23,9 @@ const PasswordContextProvider = (props) => {
 
   useEffect(() => {
     getUserId();
-  });
+  }, []);
+
+  const [passwords, setPasswords] = useState([]);
 
   useEffect(() => {
     displayPassword();
@@ -34,12 +36,10 @@ const PasswordContextProvider = (props) => {
   );
 
   const displayPassword = () => {
-    // var y = localStorage.getItem("email");
     const url = "http://localhost:9000/display-password";
     axios
       .post(url, {
-        userid: userId,
-        // email: y,
+        email: email,
       })
       .then((res) => {
         console.log(res.data);
@@ -61,32 +61,12 @@ const PasswordContextProvider = (props) => {
         userid: userId,
       })
       .then((res) => {
-        // console.log(res.data);
         console.log("Added New Password");
       });
     setPasswords([
       ...passwords,
       { id: id, websitename, websiteurl, username, passkey },
     ]);
-    // displayPassword();
-  };
-
-  const updatePassword = (id, updatedPassword) => {
-    const url = "http://localhost:9000/update-password";
-    axios
-      .put(url, {
-        id: id,
-        updatedPassword: updatedPassword,
-      })
-      .then((res) => {
-        // console.log(res.data);
-        console.log("Updated Password Entry");
-      });
-    setPasswords(
-      passwords.map((password) =>
-        password.id === id ? updatedPassword : password
-      )
-    );
     displayPassword();
   };
 
@@ -97,11 +77,26 @@ const PasswordContextProvider = (props) => {
         id: id,
       })
       .then((res) => {
-        // console.log(res.data);
         console.log("Deleted Password Entry ");
       });
     setPasswords(passwords.filter((password) => password.id !== id));
-    displayPassword();
+  };
+
+  const updatePassword = (id, updatedPassword) => {
+    const url = "http://localhost:9000/update-password";
+    axios
+      .put(url, {
+        id: id,
+        updatedPassword: updatedPassword,
+      })
+      .then((res) => {
+        console.log("Updated Password Entry");
+      });
+    setPasswords(
+      passwords.map((password) =>
+        password.id === id ? updatedPassword : password
+      )
+    );
   };
 
   return (
@@ -111,7 +106,6 @@ const PasswordContextProvider = (props) => {
         addPassword,
         deletePassword,
         updatePassword,
-        displayPassword,
       }}
     >
       {props.children}

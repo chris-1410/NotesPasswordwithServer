@@ -3,17 +3,16 @@ import NoteContainer from "./NoteContainer";
 import SideBar from "./SideBar";
 import axios from "axios";
 import "../../Styles/NotesMain.css";
-
 export const NotesMain = () => {
-  const [notes, setNotes] = useState([]);
+  const email = localStorage.getItem("email");
 
   const [userId, setuserId] = useState();
 
   function getUserId() {
     var x = localStorage.getItem("email");
-    const url2 = "http://localhost:9000/user-id";
+    const url = "http://localhost:9000/user-id";
     axios
-      .post(url2, {
+      .post(url, {
         email: x,
       })
       .then((res) => {
@@ -26,52 +25,44 @@ export const NotesMain = () => {
     getUserId();
   }, []);
 
-  // allNotes();
+  const [notes, setNotes] = useState([]);
 
   const allNotes = () => {
     const url = "http://localhost:9000/display-note";
     axios
       .post(url, {
-        user_id: userId,
+        email: email,
       })
       .then((res) => {
         setNotes(res.data);
-        setuserId(userId);
       });
   };
-
   const addNote = (color) => {
     const tempNotes = [...notes];
-
     const url = "http://localhost:9000/add-note";
     const id = Date.now() + "" + Math.floor(Math.random() * 78);
     axios
       .post(url, {
         note_id: id,
         text: "",
-        time: Date.now(),
+        time: new Date(),
         user_id: userId,
         color: color,
       })
       .then((res) => {
         console.log(res);
-        console.log("New Note Added !!!");
+        console.log("Added New Note !!!");
       });
-
     tempNotes.push({
       id: id,
       text: "",
       time: Date.now(),
       color,
     });
-
     allNotes();
-    // setNotes(tempNotes);
   };
-
   const deleteNote = (id) => {
     const tempNotes = [...notes];
-
     const url = "http://localhost:9000/delete-note";
     axios
       .post(url, {
@@ -79,22 +70,16 @@ export const NotesMain = () => {
       })
       .then((res) => {
         console.log(res);
-        console.log("Notes !!!");
+        console.log("Deleted Note !!!");
       });
-
     const index = tempNotes.findIndex((item) => item.id === id);
     if (index < 0) return;
-
     tempNotes.splice(index, 1);
     allNotes();
-    // setNotes(tempNotes);
   };
-
   const updateText = (text, id) => {
     const tempNotes = [...notes];
-
     const url = "http://localhost:9000/update-note";
-
     axios
       .put(url, {
         note_id: id,
@@ -102,21 +87,17 @@ export const NotesMain = () => {
       })
       .then((res) => {
         console.log(res);
-        console.log("Updates Notes !!!");
+        console.log("Updated Note !!!");
       });
-
     const index = tempNotes.findIndex((item) => item.id === id);
     if (index < 0) return;
-
     tempNotes[index].text = text;
     allNotes();
-    // setNotes(tempNotes);
   };
 
   useEffect(() => {
     allNotes();
   }, [notes]);
-
   return (
     <div className="App">
       <SideBar addNote={addNote} />
