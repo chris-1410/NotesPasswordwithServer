@@ -12,6 +12,8 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Copyright(props) {
   return (
@@ -28,6 +30,17 @@ const theme = createTheme();
 
 export default function SignInSide() {
   const navigate = useNavigate();
+
+  const showToastMessage1 = () => {
+    toast.error(" Invalid Password Login failed !", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
+  const showToastMessage = () => {
+    toast.success("Login Successfull !", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
 
   const [data, setData] = useState({
     email: "",
@@ -52,10 +65,21 @@ export default function SignInSide() {
         password: data.password,
       })
       .then((res) => {
+        function toastMessage() {
+          if (res.data.sucess === "True") {
+            showToastMessage();
+            console.log(res);
+          } else if (res.data.sucess === "False") {
+            showToastMessage1();
+          }
+        }
         localStorage.setItem("email", data.email);
-        if (res.data.sucess == "True") {
+        toastMessage();
+        if (res.data.sucess === "True") {
           navigate("/Home");
           console.log("Logged in Successfully !!!");
+        } else {
+          showToastMessage1();
         }
       });
   };

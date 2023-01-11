@@ -6,6 +6,9 @@ const PORT = 9000;
 app.use(cors());
 app.use(express.json());
 
+const crypto = require("crypto");
+var key = "abcdefghijklmnopqrstuvwx";
+
 app.listen(PORT, () => {
   console.log("Server has started on port " + PORT);
 });
@@ -112,6 +115,13 @@ app.put("/update-note", (req, res) => {
 // new user signup
 app.post("/signup", (req, res) => {
   const user = req.body;
+
+  const password = user.password;
+  var encrypt = crypto.createCipheriv("des-ede3", key, "");
+  var theCipher = encrypt.update(password, "utf8", "base64");
+  theCipher += encrypt.final("base64");
+  console.log(theCipher);
+
   console.log("api called");
   let selectQuery = `select count(email) from users where email='${user.email}'`;
   pool.query(selectQuery, (err, result) => {
@@ -119,7 +129,7 @@ app.post("/signup", (req, res) => {
       console.log("inside if");
       if (result.rows[0].count == 0) {
         let insertQuery = `insert into users(name, email, password)
-                            values('${req.body.name}', '${req.body.email}', '${req.body.password}') `;
+                            values('${req.body.name}', '${req.body.email}', '${theCipher}') `;
         pool.query(insertQuery, (err, result1) => {
           if (!err) {
             res.send({ exists: "False", insert: "Insertion was successful" });
@@ -148,9 +158,14 @@ app.post("/signin", (req, res) => {
   pool.query(passQuery, (err, result) => {
     // console.log(result.rows);
     if (result.rows != 0) {
-      if (result.rows[0].password == password) {
+      let passdb = result.rows[0].password;
+      var decrypt = crypto.createDecipheriv("des-ede3", key, "");
+      var s = decrypt.update(passdb, "base64", "utf8");
+      var decryptedData = s + decrypt.final("utf8");
+      console.log("s", s);
+      console.log("decryptedData", decryptedData);
+      if (decryptedData == password) {
         console.log(result.rows);
-        console.log("Logged in Successfully !!!");
         res.send({
           sucess: "True",
         });

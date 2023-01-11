@@ -11,6 +11,9 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
+import validator from "validator";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Copyright(props) {
   return (
@@ -32,6 +35,40 @@ export default function SignUp() {
     password: "",
   });
 
+  const [emailError, setEmailError] = useState("");
+  const validateEmail = (e) => {
+    var email = e.target.value;
+    if (validator.isEmail(email)) {
+      setEmailError("");
+    } else {
+      setEmailError("Enter valid Email!");
+    }
+  };
+  const showToastMessage = () => {
+    toast.success("Registration Successfull !", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const validate = (value) => {
+    if (
+      validator.isStrongPassword(value, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+    ) {
+      setErrorMessage("");
+    } else {
+      setErrorMessage(
+        "Password Must be 8 characters Long !!!  1 Uppercase 1 Lowercase 1 Number and a special Character "
+      );
+    }
+  };
+
   function onChange(e) {
     const newdata = { ...data };
     newdata[e.target.id] = e.target.value;
@@ -43,18 +80,23 @@ export default function SignUp() {
     e.preventDefault();
 
     const url = "http://localhost:9000/signup";
-
-    axios
-      .post(url, {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-      })
-      .then((res) => {
-        console.log(res.data);
-        console.log("User Registered Successfully !!!");
+    if (data.customername !== "" && data.email !== "" && data.password !== "") {
+      axios
+        .post(url, {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+        })
+        .then((res) => {
+          showToastMessage();
+          console.log(res.data);
+        });
+    } else {
+      toast.error("Please enter all details !", {
+        position: toast.POSITION.TOP_CENTER,
       });
-    e.preventDefault();
+      e.preventDefault();
+    }
   };
 
   return (
@@ -97,7 +139,10 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  onChange={(e) => onChange(e)}
+                  onChange={(e) => {
+                    onChange(e);
+                    validateEmail(e);
+                  }}
                   required
                   fullWidth
                   value={data.email}
@@ -106,10 +151,16 @@ export default function SignUp() {
                   name="email"
                   autoComplete="email"
                 />
+                <span style={{ fontWeight: "bold", color: "red" }}>
+                  {emailError}
+                </span>{" "}
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  onChange={(e) => onChange(e)}
+                  onChange={(e) => {
+                    onChange(e);
+                    validate(e.target.value);
+                  }}
                   required
                   fullWidth
                   value={data.password}
@@ -119,6 +170,11 @@ export default function SignUp() {
                   id="password"
                   autoComplete="new-password"
                 />
+                {errorMessage === "" ? null : (
+                  <span style={{ fontWeight: "bold", color: "red" }}>
+                    {errorMessage}
+                  </span>
+                )}{" "}
               </Grid>
             </Grid>
             <Button

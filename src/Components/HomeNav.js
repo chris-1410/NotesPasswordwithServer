@@ -11,15 +11,24 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Logout from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const HomeNav = () => {
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
+  const showToastMessage = () => {
+    toast.success("Logged out !!!", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
+
   const handleLogout = () => {
     localStorage.clear();
     navigate("/");
+    showToastMessage();
     console.log("Clicked Logout !!!");
   };
 
