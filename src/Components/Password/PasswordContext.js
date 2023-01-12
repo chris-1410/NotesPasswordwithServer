@@ -67,7 +67,6 @@ const PasswordContextProvider = (props) => {
       ...passwords,
       { id: id, websitename, websiteurl, username, passkey },
     ]);
-    displayPassword();
   };
 
   const deletePassword = (id) => {

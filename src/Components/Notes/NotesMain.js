@@ -23,8 +23,10 @@ export const NotesMain = () => {
 
   useEffect(() => {
     getUserId();
+    // allNotes();
   }, []);
 
+ 
   const [notes, setNotes] = useState([]);
 
   const allNotes = () => {
@@ -97,7 +99,8 @@ export const NotesMain = () => {
 
   useEffect(() => {
     allNotes();
-  }, [notes]);
+  }, []);
+
   return (
     <div className="App">
       <SideBar addNote={addNote} />

@@ -16,11 +16,11 @@ const AddPasswordForm = () => {
     setNewPassword({ ...newPassword, [e.target.name]: e.target.value });
   };
 
-  const { websitename, websiteurl, passkey, username } = newPassword;
+  const { websitename, websiteurl, username, passkey } = newPassword;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addPassword(websitename, websiteurl, passkey, username);
+    addPassword(websitename, websiteurl, username, passkey);
   };
 
   return (
