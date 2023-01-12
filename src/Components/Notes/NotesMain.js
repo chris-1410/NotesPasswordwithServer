@@ -23,11 +23,13 @@ export const NotesMain = () => {
 
   useEffect(() => {
     getUserId();
-    // allNotes();
   }, []);
 
- 
   const [notes, setNotes] = useState([]);
+
+  useEffect(() => {
+    allNotes();
+  }, []);
 
   const allNotes = () => {
     const url = "http://localhost:9000/display-note";
@@ -96,10 +98,6 @@ export const NotesMain = () => {
     tempNotes[index].text = text;
     allNotes();
   };
-
-  useEffect(() => {
-    allNotes();
-  }, []);
 
   return (
     <div className="App">
