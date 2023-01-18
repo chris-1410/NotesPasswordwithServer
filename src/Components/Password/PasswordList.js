@@ -48,7 +48,7 @@ const PasswordList = () => {
         <div className="row">
           <div className="col-sm-6">
             <h2>
-              Manage <b>Passwords</b>
+              Manage Passwords
             </h2>
           </div>
           <div className="col-sm-6">
@@ -65,7 +65,7 @@ const PasswordList = () => {
         </div>
       </div>
 
-      <Alert show={showAlert} variant="success">
+      <Alert show={showAlert} variant='info'>
         Password List Updated Successfully!
       </Alert>
 

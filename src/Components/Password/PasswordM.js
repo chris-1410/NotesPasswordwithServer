@@ -2,6 +2,8 @@ import { useContext, useState, useEffect } from "react";
 import { PasswordContext } from "./PasswordContext";
 import { Modal, OverlayTrigger, Tooltip } from "react-bootstrap";
 import EditPasswordForm from "./EditPasswordForm";
+import { MdDeleteForever } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 
 const PasswordM = ({ password }) => {
   const { deletePassword } = useContext(PasswordContext);
@@ -28,7 +30,8 @@ const PasswordM = ({ password }) => {
             className="btn text-warning btn-act"
             data-toggle="modal"
           >
-            <i className="material-icons">&#xE254;</i>
+            {/* <i className="material-icons">&#xE254;</i> */}
+            <MdEdit className="search-icons" size="1.3em" />
           </button>
         </OverlayTrigger>
         <OverlayTrigger overlay={<Tooltip id={`tooltip-top`}>Delete</Tooltip>}>
@@ -37,7 +40,8 @@ const PasswordM = ({ password }) => {
             className="btn text-danger btn-act"
             data-toggle="modal"
           >
-            <i className="material-icons">&#xE872;</i>
+            {/* <i className="material-icons">&#xE872;</i> */}
+            <MdDeleteForever className="search-icons" size="1.3em" />
           </button>
         </OverlayTrigger>
       </td>

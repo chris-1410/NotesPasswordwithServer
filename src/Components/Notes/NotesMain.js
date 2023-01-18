@@ -3,6 +3,7 @@ import NoteContainer from "./NoteContainer";
 import SideBar from "./SideBar";
 import axios from "axios";
 import "../../Styles/NotesMain.css";
+
 export const NotesMain = () => {
   const email = localStorage.getItem("email");
 
@@ -41,6 +42,7 @@ export const NotesMain = () => {
         setNotes(res.data);
       });
   };
+
   const addNote = (color) => {
     const tempNotes = [...notes];
     const url = "http://localhost:9000/add-note";
@@ -65,6 +67,7 @@ export const NotesMain = () => {
     });
     allNotes();
   };
+
   const deleteNote = (id) => {
     const tempNotes = [...notes];
     const url = "http://localhost:9000/delete-note";
@@ -81,6 +84,7 @@ export const NotesMain = () => {
     tempNotes.splice(index, 1);
     allNotes();
   };
+
   const updateText = (text, id) => {
     const tempNotes = [...notes];
     const url = "http://localhost:9000/update-note";
