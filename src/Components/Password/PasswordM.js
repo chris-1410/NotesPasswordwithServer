@@ -31,7 +31,7 @@ const PasswordM = ({ password }) => {
             data-toggle="modal"
           >
             {/* <i className="material-icons">&#xE254;</i> */}
-            <MdEdit className="search-icons" size="1.3em" />
+            <MdEdit className="search-icons" size="1.5em" />
           </button>
         </OverlayTrigger>
         <OverlayTrigger overlay={<Tooltip id={`tooltip-top`}>Delete</Tooltip>}>
@@ -41,7 +41,7 @@ const PasswordM = ({ password }) => {
             data-toggle="modal"
           >
             {/* <i className="material-icons">&#xE872;</i> */}
-            <MdDeleteForever className="search-icons" size="1.3em" />
+            <MdDeleteForever className="search-icons" size="1.5em" />
           </button>
         </OverlayTrigger>
       </td>

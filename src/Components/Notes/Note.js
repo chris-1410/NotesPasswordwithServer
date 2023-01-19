@@ -1,8 +1,10 @@
 import React from "react";
 import deleteIcon from "../../images/delete.svg";
 import "../../Styles/Note.css";
+
 let timer = 500,
   timeout;
+  
 function Note(props) {
   const formatDate = (value) => {
     if (!value) return "";
